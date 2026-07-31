@@ -1,58 +1,93 @@
-# Nombre del Proyecto
+# python-db-generator
 
-## Descripción
+Herramienta CLI en Python para generar bases de datos PostgreSQL automáticamente.
+Define tus tablas en un archivo YAML y el programa genera el esquema SQL,
+lo ejecuta, inserta datos de prueba y documenta todo.
 
-Breve explicación del proyecto.
+---
+
+## Estado del proyecto
+
+🚧 En desarrollo activo — Fase 1
 
 ---
 
 ## Objetivos
 
-- objetivo 1
-- objetivo 2
-- objetivo 3
+- Generar esquemas PostgreSQL desde definiciones YAML
+- Crear tablas, relaciones e índices automáticamente
+- Insertar datos de prueba (fixtures)
+- Exportar el esquema a archivo .sql
+- Documentar la base de datos generada
 
 ---
 
 ## Tecnologías
 
-- Python
-- Git
-- VS Code
+- Python 3.13
+- PostgreSQL
+- click — interfaz CLI
+- psycopg2 — conexión a PostgreSQL
+- PyYAML — parseo de definiciones
+- rich — output en consola
+- pytest — testing
+- python-dotenv — variables de entorno
 
 ---
 
 ## Instalación
 
 ```bash
-git clone ...
+git clone https://github.com/tuusuario/python-db-generator.git
 
-cd proyecto
+cd python-db-generator
 
 pip install -r requirements.txt
+
+cp .env.example .env
+# Edita .env con tus credenciales de PostgreSQL
 ```
 
 ---
 
 ## Uso
 
-Explicación.
+```bash
+# Próximamente
+python main.py generate --input schema.yaml
+```
+
+---
+
+## Estructura
+
+```
+python-db-generator/
+├── config/          # Configuración y variables de entorno
+├── src/
+│   ├── database/    # Conexión y manejo de PostgreSQL
+│   ├── services/    # Lógica de generación
+│   ├── models/      # Modelos de datos
+│   └── utils/       # Utilidades generales
+├── tests/           # Tests con pytest
+├── docs/            # Documentación extendida
+├── scripts/         # Scripts auxiliares
+└── output/          # Esquemas y archivos generados
+```
 
 ---
 
 ## Arquitectura
 
-Ver:
-
-docs/architecture.md
-
----
+Ver: [architecture.md](architecture.md)
 
 ## Roadmap
 
-Ver:
+Ver: [PLAN.md](PLAN.md)
 
-docs/roadmap.md
+## Decisiones técnicas
+
+Ver: [decisions.md](decisions.md)
 
 ---
 
