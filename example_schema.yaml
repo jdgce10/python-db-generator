@@ -1,0 +1,69 @@
+name: tienda
+
+tables:
+
+  - name: usuarios
+    columns:
+      - name: id
+        type: SERIAL
+        primary_key: true
+      - name: nombre
+        type: VARCHAR
+        length: 100
+        nullable: false
+      - name: email
+        type: VARCHAR
+        length: 150
+        nullable: false
+        unique: true
+      - name: creado_en
+        type: TIMESTAMP
+        default: "NOW()"
+    indexes:
+      - email
+
+  - name: productos
+    columns:
+      - name: id
+        type: SERIAL
+        primary_key: true
+      - name: nombre
+        type: VARCHAR
+        length: 200
+        nullable: false
+      - name: precio
+        type: NUMERIC
+        nullable: false
+      - name: stock
+        type: INTEGER
+        default: "0"
+
+  - name: pedidos
+    columns:
+      - name: id
+        type: SERIAL
+        primary_key: true
+      - name: usuario_id
+        type: INTEGER
+        nullable: false
+      - name: producto_id
+        type: INTEGER
+        nullable: false
+      - name: cantidad
+        type: INTEGER
+        nullable: false
+      - name: fecha
+        type: TIMESTAMP
+        default: "NOW()"
+    foreign_keys:
+      - column: usuario_id
+        references_table: usuarios
+        references_column: id
+        on_delete: CASCADE
+      - column: producto_id
+        references_table: productos
+        references_column: id
+        on_delete: RESTRICT
+    indexes:
+      - usuario_id
+      - producto_id
