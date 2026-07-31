@@ -1,93 +1,118 @@
 # python-db-generator
 
 Herramienta CLI en Python para generar bases de datos PostgreSQL automáticamente.
-Define tus tablas en un archivo YAML y el programa genera el esquema SQL,
-lo ejecuta, inserta datos de prueba y documenta todo.
+Define tus tablas en un archivo YAML y el programa genera el esquema SQL completo,
+listo para ejecutar en PostgreSQL.
 
 ---
 
-## Estado del proyecto
+## Inicio rápido
 
-🚧 En desarrollo activo — Fase 1
+```bash
+git clone https://github.com/tuusuario/python-db-generator.git
+cd python-db-generator
+pip install -r requirements.txt
+cp .env.example .env
+```
+
+```bash
+# Ver el SQL en consola
+python main.py generate example_schema.yaml --preview
+
+# Guardar en output/
+python main.py generate example_schema.yaml
+```
 
 ---
 
-## Objetivos
+## Ejemplo
 
-- Generar esquemas PostgreSQL desde definiciones YAML
-- Crear tablas, relaciones e índices automáticamente
-- Insertar datos de prueba (fixtures)
-- Exportar el esquema a archivo .sql
-- Documentar la base de datos generada
+Defines tu base de datos en YAML:
+
+```yaml
+name: tienda
+
+tables:
+  - name: usuarios
+    columns:
+      - name: id
+        type: SERIAL
+        primary_key: true
+      - name: email
+        type: VARCHAR
+        length: 150
+        nullable: false
+        unique: true
+    indexes:
+      - email
+```
+
+Y obtienes SQL listo para PostgreSQL:
+
+```sql
+CREATE TABLE IF NOT EXISTS usuarios (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(150) NOT NULL UNIQUE
+);
+
+CREATE INDEX IF NOT EXISTS idx_usuarios_email ON usuarios(email);
+```
 
 ---
 
-## Tecnologías
+## Características
+
+- Genera `CREATE TABLE` con tipos, constraints e índices
+- Soporte para `FOREIGN KEY` con acciones `CASCADE`, `RESTRICT`, `SET NULL`
+- Validación del YAML con mensajes de error claros
+- Exporta el SQL a archivo `.sql`
+- Preview en consola con sintaxis coloreada
+- CLI intuitiva con `--preview` y `--output`
+
+---
+
+## Tipos soportados
+
+`SERIAL` `BIGSERIAL` `INTEGER` `BIGINT` `VARCHAR` `TEXT`
+`BOOLEAN` `DATE` `TIMESTAMP` `FLOAT` `NUMERIC` `UUID`
+
+---
+
+## Documentación
+
+- [Guía de uso](docs/usage.md) — comandos, opciones y referencia completa
+- [Ejemplos](docs/examples.md) — YAMLs de ejemplo con su SQL generado
+- [Contribuir](docs/contributing.md) — cómo contribuir al proyecto
+- [Arquitectura](architecture.md) — diseño interno del proyecto
+- [Roadmap](PLAN.md) — estado y fases de desarrollo
+- [Decisiones](decisions.md) — registro de decisiones técnicas
+- [Changelog](CHANGELOG.md) — historial de cambios
+
+---
+
+## Stack
 
 - Python 3.13
 - PostgreSQL
-- click — interfaz CLI
-- psycopg2 — conexión a PostgreSQL
-- PyYAML — parseo de definiciones
+- click — CLI
 - rich — output en consola
+- PyYAML — parseo de definiciones
 - pytest — testing
 - python-dotenv — variables de entorno
 
 ---
 
-## Instalación
+## Tests
 
 ```bash
-git clone https://github.com/tuusuario/python-db-generator.git
-
-cd python-db-generator
-
-pip install -r requirements.txt
-
-cp .env.example .env
-# Edita .env con tus credenciales de PostgreSQL
+pytest tests/ -v
 ```
 
 ---
 
-## Uso
+## Estado del proyecto
 
-```bash
-# Próximamente
-python main.py generate --input schema.yaml
-```
-
----
-
-## Estructura
-
-```
-python-db-generator/
-├── config/          # Configuración y variables de entorno
-├── src/
-│   ├── database/    # Conexión y manejo de PostgreSQL
-│   ├── services/    # Lógica de generación
-│   ├── models/      # Modelos de datos
-│   └── utils/       # Utilidades generales
-├── tests/           # Tests con pytest
-├── docs/            # Documentación extendida
-├── scripts/         # Scripts auxiliares
-└── output/          # Esquemas y archivos generados
-```
-
----
-
-## Arquitectura
-
-Ver: [architecture.md](architecture.md)
-
-## Roadmap
-
-Ver: [PLAN.md](PLAN.md)
-
-## Decisiones técnicas
-
-Ver: [decisions.md](decisions.md)
+🟢 Fase 4 completada — Documentación lista
 
 ---
 

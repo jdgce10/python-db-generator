@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## [0.3.0] — 2026-07-31
+
+### Añadido
+- docs/usage.md — guía completa de uso con referencia de tipos y propiedades
+- docs/examples.md — 3 ejemplos reales con YAML de entrada y SQL de salida
+- docs/contributing.md — guía de contribución con flujo de trabajo y convenciones
+- README.md actualizado con inicio rápido, ejemplo inline y links a docs
+- conftest.py en raíz y pytest.ini para resolución correcta de imports
+- Fase 4 completada: documentación lista
+
 ## [0.2.0] — 2026-07-31
 
 ### Añadido
