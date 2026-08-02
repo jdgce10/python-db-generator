@@ -94,10 +94,20 @@ class TestInvalidTypes:
             })
 
     def test_on_delete_invalido(self) -> None:
+        """
+        El schema incluye ambas tablas para que la validación de
+        tabla referenciada pase y llegue a validar el on_delete.
+        """
         with pytest.raises(ValidationError, match="on_delete"):
             validate_schema({
                 "name": "db",
                 "tables": [
+                    {
+                        "name": "usuarios",
+                        "columns": [
+                            {"name": "id", "type": "SERIAL", "primary_key": True},
+                        ],
+                    },
                     {
                         "name": "pedidos",
                         "columns": [
@@ -112,7 +122,7 @@ class TestInvalidTypes:
                                 "on_delete": "INVENTADO",
                             }
                         ],
-                    }
+                    },
                 ],
             })
 
@@ -156,10 +166,18 @@ class TestDuplicates:
 class TestInvalidReferences:
 
     def test_fk_columna_inexistente(self) -> None:
+        """
+        La tabla referenciada existe pero la columna local no.
+        Incluimos usuarios para que pase la validación de tabla.
+        """
         with pytest.raises(ValidationError, match="inexistente"):
             validate_schema({
                 "name": "db",
                 "tables": [
+                    {
+                        "name": "usuarios",
+                        "columns": [{"name": "id", "type": "SERIAL"}],
+                    },
                     {
                         "name": "pedidos",
                         "columns": [{"name": "id", "type": "SERIAL"}],
@@ -170,7 +188,7 @@ class TestInvalidReferences:
                                 "references_column": "id",
                             }
                         ],
-                    }
+                    },
                 ],
             })
 

@@ -33,14 +33,25 @@ def validate_schema(data: dict[str, Any]) -> None:
     if not isinstance(data["tables"], list) or len(data["tables"]) == 0:
         raise ValidationError("El schema debe tener al menos una tabla.")
 
-    table_names: list[str] = []
+    # Recolectamos TODOS los nombres primero para validar referencias FK
+    # entre tablas independientemente del orden en el YAML
+    all_table_names: list[str] = [
+        t["name"] for t in data["tables"]
+        if isinstance(t, dict) and isinstance(t.get("name"), str)
+    ]
+
+    seen_table_names: list[str] = []
 
     for table in data["tables"]:
-        _validate_table(table, table_names)
-        table_names.append(table["name"])
+        _validate_table(table, seen_table_names, all_table_names)
+        seen_table_names.append(table["name"])
 
 
-def _validate_table(table: dict[str, Any], existing_tables: list[str]) -> None:
+def _validate_table(
+    table: dict[str, Any],
+    existing_tables: list[str],
+    all_table_names: list[str],
+) -> None:
     """Valida una tabla individual."""
     _check_required_keys(table, REQUIRED_TABLE_KEYS, context="tabla")
 
@@ -63,7 +74,12 @@ def _validate_table(table: dict[str, Any], existing_tables: list[str]) -> None:
 
     if "foreign_keys" in table:
         for fk in table["foreign_keys"]:
-            _validate_foreign_key(fk, table_name=name, column_names=column_names)
+            _validate_foreign_key(
+                fk,
+                table_name=name,
+                column_names=column_names,
+                all_table_names=all_table_names,
+            )
 
     if "indexes" in table:
         for index_col in table["indexes"]:
@@ -101,6 +117,7 @@ def _validate_foreign_key(
     fk: dict[str, Any],
     table_name: str,
     column_names: list[str],
+    all_table_names: list[str],
 ) -> None:
     """Valida una clave foránea."""
     required = {"column", "references_table", "references_column"}
@@ -109,6 +126,14 @@ def _validate_foreign_key(
     if fk["column"] not in column_names:
         raise ValidationError(
             f"Foreign key en '{table_name}' referencia columna inexistente: '{fk['column']}'."
+        )
+
+    # ── MEJORA #2 — verificar que la tabla referenciada existe en el schema ──
+    ref_table = fk["references_table"]
+    if ref_table not in all_table_names:
+        raise ValidationError(
+            f"Foreign key en '{table_name}' referencia tabla inexistente: '{ref_table}'. "
+            f"Tablas disponibles: {', '.join(all_table_names)}."
         )
 
     if "on_delete" in fk:

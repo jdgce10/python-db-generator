@@ -2,10 +2,6 @@
 
 ## Qué es este proyecto
 
-Herramienta CLI en Python que genera bases de datos PostgreSQL automáticamente.
-El usuario describe la estructura (tablas, relaciones, tipos de datos) y el programa
-genera el esquema SQL, lo ejecuta, inserta datos de prueba y documenta todo.
-
 ---
 
 ## Estado actual
